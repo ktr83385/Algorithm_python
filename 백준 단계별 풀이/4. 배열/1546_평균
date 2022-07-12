@@ -1,0 +1,9 @@
+n = int(input())
+list = list(map(int, input().split()))
+
+max_grade = max(list)
+
+for i in range(len(list)):
+    list[i] = list[i] / (max_grade * 100)
+
+print(sum(list) / len(list) * 10000)
