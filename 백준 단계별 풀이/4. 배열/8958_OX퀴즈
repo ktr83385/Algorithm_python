@@ -1,0 +1,20 @@
+n = int(input())
+
+ox_list = []
+score_list = [0] * 80
+
+for i in range(n):
+    ox_list.append(input())
+
+for i in range(len(ox_list)):
+    score_list = [0] * 80
+    for j in range(len(ox_list[i])):
+        if ox_list[i][j] == 'O':
+            if j == 0:
+                score_list[j] = 1
+            else:
+                score_list[j] = score_list[j - 1] + 1
+        else:
+            score_list[j] = 0
+
+    print(sum(score_list))
