@@ -1,0 +1,23 @@
+import sys
+
+n = int(sys.stdin.readline().rstrip())
+
+for i in range(n):
+    lst = []
+    temp = map(int, sys.stdin.readline().rstrip().split())
+    lst = list(temp)
+    students = lst[0]
+    del(lst[0])
+    count = 0
+
+    sum_grade = sum(lst)
+    grade_average = sum_grade / students
+    
+    for j in lst:
+        if j > grade_average:
+            count = count + 1
+
+    result = count / students * 100
+    print_result = str(f'{result:.3f}') + "%"
+
+    print(print_result)
