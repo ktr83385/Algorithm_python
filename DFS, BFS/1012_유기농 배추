@@ -1,0 +1,45 @@
+import sys
+from collections import deque
+
+def bfs(x, y):
+    global count
+    q = deque()
+    q.append([x, y])
+    visited[x][y] = True
+    count = count + 1
+
+    dx = [0, 0, 1, -1] #동서남북
+    dy = [1, -1, 0, 0]
+    
+    while q:
+        a, b = q.popleft()
+        
+        for i in range(len(dx)):
+            nx = dx[i] + a
+            ny = dy[i] + b
+
+            if nx < 0 or ny < 0 or nx >= n or ny >= m:
+                continue
+            if visited[nx][ny] == False and graph[nx][ny] == 1:
+                visited[nx][ny] = True
+                q.append([nx, ny])
+
+
+test_num = int(sys.stdin.readline().rstrip())
+
+for q in range(test_num):
+    count = 0
+    n, m, k = map(int, sys.stdin.readline().rstrip().split())
+    graph = [[0] * m for _ in range(n)]
+    visited = [[False] * m for _ in range(n)]
+
+    for w in range(k):
+        a, b = map(int, sys.stdin.readline().rstrip().split())
+        graph[a][b] = 1
+    
+    for e in range(n):
+        for r in range(m):
+            if visited[e][r] == False and graph[e][r] == 1:
+                bfs(e, r)
+    
+    print(count)
