@@ -1,0 +1,13 @@
+initial_num_list = set(range(1, 10001))
+selfnum_list = set()
+
+for i in initial_num_list:
+    result = i
+    for j in str(i):    # 자리수 더하기
+        result += int(j)
+    selfnum_list.add(result)    #set은 append가 아니라 add
+
+result_list = sorted(initial_num_list - selfnum_list)   #차집합
+
+for i in result_list:
+    print(i)
