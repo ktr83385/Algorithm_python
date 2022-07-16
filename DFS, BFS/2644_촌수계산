@@ -1,0 +1,85 @@
+import sys
+from collections import deque
+
+def bfs(start):
+    global graph, visited, result
+    q = deque()
+    q.append(start)
+    visited[start] = True
+    
+    while q:
+        a = q.popleft()
+
+        if a == target_y:
+            return graph[a][0]
+
+        for idx,node in enumerate(graph[a]):
+            if idx == 0:
+                continue
+
+            if visited[node] == False:
+                q.append(node)
+                visited[node] = True
+                graph[node][0] = graph[a][0] + 1
+        
+    return -1
+                
+result = 0
+n = int(sys.stdin.readline())
+target_x, target_y = map(int, sys.stdin.readline().split())
+m = int(sys.stdin.readline())
+
+graph = [[0] for _ in range(n + 1)]
+visited = [False] * (n + 1)
+
+for _ in range(m):
+    x, y = map(int, sys.stdin.readline().split())
+    graph[x].append(y)
+    graph[y].append(x)
+
+result = bfs(target_x)
+print(result)
+
+# import sys
+# from collections import deque
+
+# def bfs(start):
+#     global graph, visited, break_time, result
+#     q = deque()
+#     q.append(start)
+#     visited[start] = True
+    
+#     while q:
+#         a = q.popleft()
+#         if a == target_y:
+#             return graph[a][0]
+
+#         for idx,node in enumerate(graph[a]):
+#             if idx == 0:
+#                 continue
+
+#             if visited[node] == False:
+#                 q.append(node)
+#                 visited[node] = True
+#                 graph[node][0] = graph[a][0] + 1
+    
+#     return -1
+
+
+# result = 0
+# n = int(sys.stdin.readline())
+# target_x, target_y = map(int, sys.stdin.readline().split())
+# m = int(sys.stdin.readline())
+
+# graph = [[0] for _ in range(n + 1)]
+# visited = [False] * (n + 1)
+# break_time = False
+
+# for _ in range(m):
+#     x, y = map(int, sys.stdin.readline().split())
+#     graph[x].append(y)
+#     graph[y].append(x)
+
+# result = bfs(target_x)
+# # print(graph)
+# print(result)

@@ -1,0 +1,38 @@
+import sys
+from collections import deque
+
+def bfs(start):
+    global cnt_list, visited, graph
+    q = deque()
+    q.append(start)
+    visited[start] = True
+    count = 0
+
+    while q:
+        a = q.popleft()
+
+        for node in graph[a]:
+            if visited[node] == False:
+                cnt_list[node] = cnt_list[a] + 1
+            
+                if cnt_list[node] < 3:
+                    visited[node] = True
+                    count += 1
+                    q.append(node)
+
+    return count
+
+n = int(sys.stdin.readline())
+m = int(sys.stdin.readline())
+
+graph = [[] for _ in range(n + 1)]
+visited = [False] * (n + 1)
+cnt_list = [0] * (n + 1)
+
+for _ in range(m):
+    a, b = map(int, sys.stdin.readline().split())
+    graph[a].append(b)
+    graph[b].append(a)
+
+result = bfs(1)
+print(result)
