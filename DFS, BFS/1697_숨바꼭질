@@ -1,0 +1,28 @@
+import sys
+from collections import deque
+
+def bfs(start):
+    q = deque()
+    q.append([0, start])
+    visited[start] = True
+
+    while q:
+        count, x = q.popleft()
+
+        if x == k:
+            return count_list[x]
+        
+        for i in (x - 1, x + 1, x * 2):
+            if 0 <= i <= 100000 and visited[i] == False:
+                visited[i] = True
+                count_list[i] = count + 1
+                q.append([count_list[i], i])
+
+n, k = map(int, sys.stdin.readline().split())
+
+visited = [False] * 100001
+count_list = [0] * 100001
+
+result = bfs(n)
+
+print(result)

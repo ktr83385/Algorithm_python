@@ -1,0 +1,33 @@
+import sys
+from collections import deque
+
+def bfs(start):
+    global n, graph, visited, count_list
+    q = deque()
+    q.append([0, start])
+    visited[0] = True
+
+    while q:
+        index, value = q.popleft()
+        
+        for i in range(1, value + 1):
+            if index + i < n and visited[index + i] == False:
+                count_list[index + i] = count_list[index] + 1
+                visited[index + i] = True
+                q.append([index + i, graph[index + i]])
+
+n = int(sys.stdin.readline())
+graph = list(map(int, sys.stdin.readline().split()))
+visited = [False] * n #index 기준으로 체크해야함
+count_list = [0] * n #이동한 횟수값 담는 리스트
+
+if n == 1:
+    print(0)
+    sys.exit()
+
+bfs(graph[0])
+
+if count_list[n - 1] == 0:
+    print(-1)
+else:
+    print(count_list[n - 1])

@@ -1,0 +1,54 @@
+# 1. 높이에 따라 0, 1로 그래프 최신화 (graph 2개 선언)
+# 2. 1~100까지 돌면서 안전영역 구하기 (bfs 돌때마다 count + 1)
+# 3. 2번에서 계산한 count값 count_list에 담기
+# 4. max(count_list) 출력
+
+import sys
+from collections import deque
+
+def bfs(x, y):
+    global n, visited
+    q = deque()
+    q.append([x, y])
+    visited[x][y] = True
+    
+    dx = [0, 0, 1, -1] #동서남북
+    dy = [1, -1, 0, 0]
+
+    while q:
+        a, b = q.popleft()
+        
+        for i in range(4):
+            nx = dx[i] + a
+            ny = dy[i] + b
+
+            if -1 < nx < n and -1 < ny < n and visited[nx][ny] == False and changed_graph[nx][ny] == 1:
+                q.append([nx, ny])
+                visited[nx][ny] = True
+
+n = int(sys.stdin.readline())
+
+initial_graph = []
+changed_graph = [[0] * n for _ in range(n)]
+count_list = [0] * 101
+
+for _ in range(n):
+    initial_graph.append(list(map(int, sys.stdin.readline().split())))
+
+for i in range(1, 101):
+    visited = [[False] * n for _ in range(n)]
+
+    for j in range(n):
+        for k in range(n):
+            if initial_graph[j][k] < i:
+                changed_graph[j][k] = 0
+            else:
+                changed_graph[j][k] = 1
+
+    for a in range(n):
+        for b in range(n):
+            if visited[a][b] == False and changed_graph[a][b] == 1:
+                bfs(a, b)
+                count_list[i] += 1
+
+print(max(count_list))

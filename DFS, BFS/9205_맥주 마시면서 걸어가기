@@ -1,0 +1,60 @@
+import sys
+from collections import deque
+
+# 1. 바로 페스티벌에 갈 수 있는지
+# 2. 그렇지 않다면 편의점에 들러야함
+
+def bfs(sanggn_location):
+    global visited_rock, visited_conv, visited_sanggn, convenience_store_location, rock_location
+    q = deque()
+    q.append(sanggn_location)
+    visited_sanggn = True
+
+    while q:
+        a, b = q.popleft()
+        
+        rock_diff = int(abs(rock_location[0][0] - a) + abs(rock_location[0][1] - b))
+
+        if rock_diff <= 1000:
+            visited_rock = True
+            return visited_rock
+        else:
+            for idx, conv in enumerate(convenience_store_location):
+                conv_diff = int(abs(conv[0] - a) + abs(conv[1] - b))
+                if conv_diff <= 1000 and visited_conv[idx] == False:
+                    visited_conv[idx] = True
+                    nx = conv[0]
+                    ny = conv[1]
+                    q.append([nx, ny])
+
+    return visited_rock
+
+t = int(sys.stdin.readline())
+
+for _ in range(t):
+    n = int(sys.stdin.readline())
+    x, y = map(int, sys.stdin.readline().split())
+
+    sanggn_location = []
+    convenience_store_location = []
+    rock_location = []
+
+    sanggn_location.append([x, y])
+    
+    for _ in range(n):
+        x, y = map(int, sys.stdin.readline().split())
+        convenience_store_location.append([x, y])
+
+    x, y = map(int, sys.stdin.readline().split())
+    rock_location.append([x, y])
+
+    visited_sanggn = False
+    visited_conv = [False] * len(convenience_store_location)
+    visited_rock = False
+
+    result = bfs(sanggn_location[0])
+
+    if result == True:
+        print("happy")
+    else:
+        print("sad")

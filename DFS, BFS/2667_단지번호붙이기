@@ -1,0 +1,48 @@
+import sys
+from collections import deque
+
+def bfs(x, y):
+    q = deque()
+    q.append([x, y])
+    visited[x][y] = True
+    cnt = 1
+    
+    dx = [0, 0, 1, -1] #동서남북
+    dy = [1, -1, 0, 0]
+
+    while q:
+        a, b = q.popleft()
+        
+        for i in range(4):
+            nx = dx[i] + a
+            ny = dy[i] + b
+            
+            if -1 < nx < n and -1 < ny < n and visited[nx][ny] == False and graph[nx][ny] == 1:
+                q.append([nx, ny])
+                visited[nx][ny] = True
+                cnt += 1
+        
+    count_list.append(cnt)
+
+n = int(sys.stdin.readline())
+
+graph = []
+visited = [[False] * n for _ in range(n)]
+count_list = []
+count = 0
+
+for _ in range(n):
+    graph.append(list(map(int, sys.stdin.readline().strip())))
+
+for i in range(n):
+    for j in range(n):
+        if visited[i][j] == False and graph[i][j] == 1:
+            bfs(i, j)
+            count += 1
+
+print(count)
+
+count_list.sort()
+
+for i in range(len(count_list)):
+    print(count_list[i])
