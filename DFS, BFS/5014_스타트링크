@@ -1,0 +1,51 @@
+import sys
+from collections import deque
+
+def bfs(s):
+    global f, g, u, d
+    q = deque()
+    count = 0
+    q.append([count, s])
+    visited[s] = True
+
+    if s == g:
+        return 0
+    
+    while q:
+        count, floor = q.popleft()
+        local_count = 0
+        
+        up_floor = floor + u
+        down_floor = floor - d
+
+        if up_floor == g:
+            local_count = count + 1
+            return local_count
+        
+        if down_floor == g:
+            local_count = count + 1
+            return local_count
+
+        if 1 <= up_floor <= f and visited[up_floor] == False:
+            local_count = count + 1
+            q.append([local_count, up_floor])
+            visited[up_floor] = True
+        
+        if 1 <= down_floor <= f and visited[down_floor] == False:
+            local_count = count + 1
+            q.append([local_count, down_floor])
+            visited[down_floor] = True
+    
+    return -1
+        
+    
+f, s, g, u, d = map(int, sys.stdin.readline().split())
+
+visited = [False] * (f + 1)
+
+result = bfs(s)
+
+if result == -1:
+    print("use the stairs")
+else:
+    print(result)

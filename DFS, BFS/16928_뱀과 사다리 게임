@@ -1,0 +1,47 @@
+import sys
+from collections import deque
+
+def bfs(start):
+    q = deque()
+    count = 0
+    q.append([count, start])
+    visited[start] = True
+
+    dx = [1, 2, 3, 4, 5, 6] # 1, 2, 3, 4, 5, 6칸 이동
+
+    while q:
+        count, a = q.popleft()
+        
+        for i in range(6):
+            nx = dx[i] + a
+
+            if nx <= 100 and visited[nx] == False:
+                visited[nx] = True
+
+                # 횟수 셀 때 변수에 담을지 말지 여부에 대해 신경 써야함. ex) local_cnt = count + 1
+                #count += 1을 하면 loop를 돌면서 이상한 값이 들어가기 때문에 주의
+                local_cnt = count + 1   
+                q.append([local_cnt, graph[nx]])
+            
+            if nx == 100:
+                return local_cnt
+
+graph = [0]
+visited = [False] * 101
+
+for i in range(1, 101):
+    graph.append(i)
+
+n, m = map(int, sys.stdin.readline().split())
+
+for _ in range(n):
+    x, y = map(int, sys.stdin.readline().split())
+    graph[x] = y
+
+for _ in range(m):
+    u, v = map(int, sys.stdin.readline().split())
+    graph[u] = v
+
+result = bfs(1)
+
+print(result)
