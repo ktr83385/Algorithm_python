@@ -1,0 +1,59 @@
+import copy
+import sys
+from collections import deque
+
+def wall(cnt):
+    if cnt == 3:
+        # visited = [[False] * m for _ in range(n)]
+        bfs()
+        return
+    for i in range(n):
+        for j in range(m):
+            if graph[i][j] == 0:
+                graph[i][j] = 1
+                wall(cnt + 1)
+                graph[i][j] = 0
+
+def bfs():
+    global max_safe
+    graph2 = copy.deepcopy(graph)
+    q = deque()
+    for i in range(n):
+        for j in range(m):
+            if graph2[i][j] == 2:
+                q.append([i, j])
+                # visited[i][j] = True
+    
+    dx = [0, 0, 1, -1] #동서남북
+    dy = [1, -1, 0, 0]
+    
+    while q:
+        a, b = q.popleft()
+        
+        for i in range(4):
+            nx = dx[i] + a
+            ny = dy[i] + b
+
+            if -1 < nx < n and -1 < ny < m and graph2[nx][ny] == 0:
+                q.append([nx, ny])
+                graph2[nx][ny] = 2
+                # visited[nx][ny] = True
+    
+    count = 0
+    for i in graph2:
+        count += i.count(0)
+    max_safe = max(max_safe, count)
+
+n, m = map(int, sys.stdin.readline().split())
+
+graph = []
+max_safe = 0
+
+for _ in range(n):
+    graph.append(list(map(int, sys.stdin.readline().split())))
+
+# visited = [[False] * m for _ in range(n)]
+
+wall(0)
+
+print(max_safe)

@@ -1,0 +1,47 @@
+import sys
+from collections import deque
+
+def bfs():
+    global m, n
+    q = deque()
+    for i in range(n):
+        for j in range(m):
+            if graph[i][j] == 1:
+                q.append([i, j])
+                visited[i][j] = True
+    
+    dx = [0, 0, 1, -1] #동서남북
+    dy = [1, -1, 0, 0]
+    
+    while q:
+        a, b = q.popleft()
+        
+        for i in range(4):
+            nx = dx[i] + a
+            ny = dy[i] + b
+            
+            if -1 < nx < n and -1 < ny < m and visited[nx][ny] == False and graph[nx][ny] == 0:
+                q.append([nx, ny])
+                visited[nx][ny] = True
+                graph[nx][ny] = graph[a][b] + 1
+    
+    if any(0 in i for i in graph):
+        return -1
+    else:
+        return max(map(max, graph)) - 1
+
+
+m, n = map(int, sys.stdin.readline().split())
+
+graph = []
+visited = [[False] * m for _ in range(n)]
+
+for _ in range(n):
+    graph.append(list(map(int, sys.stdin.readline().split())))
+
+if not any(0 in i for i in graph):
+    print(0)
+    exit()
+else:
+    result = bfs()
+    print(result)

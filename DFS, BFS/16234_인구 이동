@@ -1,0 +1,64 @@
+import sys
+from collections import deque
+
+def bfs(x, y):
+    global n, l, r
+    union = []
+    q = deque()
+    q.append([x, y])
+    visited[x][y] = True
+    union.append([x, y])
+
+    dx = [0, 0, 1, -1] #동서남북
+    dy = [1, -1, 0, 0]
+
+    while q:
+        a, b = q.popleft()
+        
+        for i in range(4):
+            nx = dx[i] + a
+            ny = dy[i] + b
+
+            if -1 < nx < n and -1 < ny < n and visited[nx][ny] == False and (l <= abs(graph[a][b] - graph[nx][ny]) <= r):
+                union.append([nx, ny])
+                q.append([nx, ny])
+                visited[nx][ny] = True
+    
+    return union
+
+n, l, r = map(int, sys.stdin.readline().split())
+
+graph = []
+visited = [[False] * n for _ in range(n)]
+count = 0
+
+for _ in range(n):
+    graph.append(list(map(int, sys.stdin.readline().split())))
+
+
+while True:
+    flag = 0
+    visited = [[False] * n for _ in range(n)]
+
+    for i in range(n):
+        for j in range(n):
+            if visited[i][j] == False:
+                result = bfs(i, j)
+                visited[i][j] = True
+
+                population_count = 0
+
+                if len(result) > 1:
+                    flag = 1
+                    for x, y in result:
+                        population_count += graph[x][y]
+                    population = population_count // len(result)    #연합 국가의 인구수 평균 구하기
+
+                    for x, y in result:
+                        graph[x][y] = population
+    
+    if flag == 0:
+        print(count)
+        break
+
+    count += 1

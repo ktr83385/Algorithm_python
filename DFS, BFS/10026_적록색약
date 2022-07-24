@@ -1,0 +1,77 @@
+import sys
+from collections import deque
+
+def bfs1(x, y, color): #적록색약 X
+    global n
+    q = deque()
+    q.append([x, y, color])
+    visited[x][y] = True
+
+    dx = [0, 0, 1, -1] #동서남북
+    dy = [1, -1, 0, 0]
+
+    while q:
+        a, b, color = q.popleft()
+
+        for i in range(4):
+            nx = dx[i] + a
+            ny = dy[i] + b
+
+            if -1 < nx < n and -1 < ny < n and visited[nx][ny] == False and graph[nx][ny] == color:
+                q.append([nx, ny, color])
+                visited[nx][ny] = True
+
+def bfs2(x, y, color): #적록색약 O
+    global n
+    q = deque()
+    q.append([x, y, color])
+    visited[x][y] = True
+
+    dx = [0, 0, 1, -1] #동서남북
+    dy = [1, -1, 0, 0]
+
+    while q:
+        a, b, color = q.popleft()
+
+        for i in range(4):
+            nx = dx[i] + a
+            ny = dy[i] + b
+
+            if color == "R" or color == "G":
+                if -1 < nx < n and -1 < ny < n and visited[nx][ny] == False and (graph[nx][ny] == "R" or graph[nx][ny] == "G"):
+                    q.append([nx, ny, color])
+                    visited[nx][ny] = True
+
+            else:
+                if -1 < nx < n and -1 < ny < n and visited[nx][ny] == False and graph[nx][ny] == color:
+                    q.append([nx, ny, color])
+                    visited[nx][ny] = True
+
+
+n = int(sys.stdin.readline())
+
+graph = []
+
+for _ in range(n):
+    graph.append(list(sys.stdin.readline().strip()))
+
+count1 = 0
+count2 = 0
+
+visited = [[False] * n for _ in range(n)]
+
+for i in range(n):
+    for j in range(n):
+        if visited[i][j] == False:
+            bfs1(i, j, graph[i][j])
+            count1 += 1
+
+visited = [[False] * n for _ in range(n)]
+
+for i in range(n):
+    for j in range(n):
+        if visited[i][j] == False:
+            bfs2(i, j, graph[i][j])
+            count2 += 1
+
+print(count1, count2)

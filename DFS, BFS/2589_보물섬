@@ -1,0 +1,57 @@
+# graph가 계속 초기화 되도록 만들어볼것
+# 시간 복잡도 줄여 볼 것
+
+import sys
+from collections import deque
+
+def bfs(x, y):
+    global n
+    q = deque()
+    q.append([x, y])
+    visited[x][y] = True
+
+    dx = [0, 0, 1, -1] #동서남북
+    dy = [1, -1, 0, 0]
+
+    while q:
+        a, b = q.popleft()
+
+        for i in range(4):
+            nx = dx[i] + a
+            ny = dy[i] + b
+
+            if -1 < nx < n and -1 < ny < m and visited[nx][ny] == False and graph2[nx][ny] == 1:
+                q.append([nx, ny])
+                visited[nx][ny] = True
+                graph2[nx][ny] = graph2[a][b] + 1
+    
+    hour = max(map(max, graph2)) - 1
+    return hour
+
+n, m = map(int, sys.stdin.readline().split())
+
+graph = []
+dist_list = []
+
+for _ in range(n):
+    graph.append(list(sys.stdin.readline().strip()))
+
+graph2 = [[0] * m for _ in range(n)]
+
+for i in range(n):
+    for j in range(m):
+        # graph2 초기화
+        for u in range(n):
+            for v in range(m):
+                if graph[u][v] == "L":
+                    graph2[u][v] = 1
+                else:
+                    graph2[u][v] = 0
+
+        visited = [[False] * m for _ in range(n)]
+
+        if graph2[i][j] == 1 and visited[i][j] == False:
+            result = bfs(i, j)
+            dist_list.append(result)
+
+print(max(dist_list))
