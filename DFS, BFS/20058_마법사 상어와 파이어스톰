@@ -1,0 +1,113 @@
+import sys
+import copy
+from collections import deque
+
+def graph_split(N, L):
+    global graph
+    temp = copy.deepcopy(graph)
+
+    if L <= N:
+        for i in range(2 ** N // 2 ** L):
+            for j in range(2 ** N // 2 ** L):
+                rotate(temp, i, j)
+    
+    return graph
+
+
+def rotate(temp, x, y):
+    global graph, L
+
+    for u in range(2 ** L):
+        for v in range(2 ** L):
+            graph[(2 ** L) * x + v][(2 ** L) * (y + 1) - 1 - u] = temp[x * (2 ** L) + u][y * (2 ** L) + v]
+
+
+def ice_melting(graph):
+    ice_check_temp = copy.deepcopy(graph)
+
+    for i in range(2 ** N):
+        for j in range(2 ** N):
+            count = ice_check_bfs(graph, i, j, ice_check_temp)
+            if count < 3 and graph[i][j] > 0:
+                graph[i][j] -= 1
+    
+    return graph
+
+def ice_check_bfs(graph, x, y, ice_check_temp):
+    global N
+    dx = [0, 0, 1, -1] #동서남북
+    dy = [1, -1, 0, 0]
+
+    count = 0
+
+    for i in range(4):
+        nx = dx[i] + x
+        ny = dy[i] + y
+    
+        if -1 < nx < 2 ** N and -1 < ny < 2 ** N and ice_check_temp[nx][ny] > 0:
+            count += 1
+
+    return count
+
+def bfs(x, y):
+    q = deque()
+    q.append([x, y])
+    visited[x][y] = True
+
+    dx = [0, 0, 1, -1] #동서남북
+    dy = [1, -1, 0, 0]
+
+    count = 1
+
+    while q:
+        a, b = q.popleft()
+
+        for i in range(4):
+            nx = dx[i] + a
+            ny = dy[i] + b
+
+            if -1 < nx < 2 ** N and -1 < ny < 2 ** N and visited[nx][ny] == False and graph[nx][ny] > 0:
+                q.append([nx, ny])
+                visited[nx][ny] = True
+                count += 1
+
+    return count
+
+
+N, Q = map(int, sys.stdin.readline().split())
+
+graph = []
+visited = [[False] * (2 ** N) for _ in range(2 ** N)]
+ice_check = [[0] * (2 ** N) for _ in range(2 ** N)]
+
+for _ in range(2 ** N):
+    graph.append(list(map(int, sys.stdin.readline().split())))
+
+fire_storm = list(map(int, sys.stdin.readline().split()))
+
+for i in fire_storm:
+    L = i
+    graph = graph_split(N, L)
+    fired_graph = ice_melting(graph)
+
+# 1. 남아있는 얼음의 합
+sum = 0
+
+for i in range(2 ** N):
+    for j in range(2 ** N):
+        sum += graph[i][j]
+
+# 2. 가장 큰 덩어리 칸의 개수
+result_list = [0]
+
+for i in range(2 ** N):
+    for j in range(2 ** N):
+        if visited[i][j] == False and graph[i][j] > 0:
+            result = bfs(i, j)
+            result_list.append(result)
+
+print(sum)
+if max(result_list) < 2:
+    print(0)
+else:
+    print(max(result_list))
