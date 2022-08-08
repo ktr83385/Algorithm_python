@@ -1,0 +1,75 @@
+import sys
+from itertools import combinations as comb
+from collections import deque
+
+dx = [0, 0, 1, -1] #동서남북
+dy = [1, -1, 0, 0]
+
+def bfs(q, blank):
+    visited = [[False] * n for _ in range(n)]
+    time = 0
+
+    while True:
+        length = len(q)
+        
+        if length == 0 or blank == 0:
+            if blank == 0:
+                return time
+            else:
+                return 10e9
+
+        time += 1
+
+        for i in range(len(q)):
+            a, b = q.popleft()
+
+            if visited[a][b] == False:
+                visited[a][b] = True
+
+            for j in range(4):
+                nx = dx[j] + a
+                ny = dy[j] + b
+
+                if -1 < nx < n and -1 < ny < n:
+                    if visited[nx][ny] == False:
+                        if graph[nx][ny] == 0:
+                            blank -= 1
+                            q.append([nx, ny])
+                            visited[nx][ny] = True
+                        elif graph[nx][ny] == 2:
+                            q.append([nx, ny])
+                            visited[nx][ny] = True
+
+n, m = map(int, sys.stdin.readline().split())
+
+graph = []
+
+for _ in range(n):
+    graph.append(list(map(int, sys.stdin.readline().split())))
+
+blank_num = 0
+virus_location = []
+
+for i in range(n):
+    for j in range(n):
+        if graph[i][j] == 0:
+            blank_num += 1
+        if graph[i][j] == 2:
+            virus_location.append([i, j])
+
+virus_comb = comb(virus_location, m)
+result = 10e9
+
+for virus_list in virus_comb:
+    q = deque()
+
+    for virus in virus_list:
+        q.append(virus)
+    
+    temp_result = bfs(q, blank_num)
+    result = min(result, temp_result)
+
+if result == 10e9:
+    print(-1)
+else:
+    print(result)

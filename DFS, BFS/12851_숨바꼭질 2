@@ -1,0 +1,44 @@
+import sys
+from collections import deque
+
+def bfs(x):
+    q = deque()
+    q.append(x)
+    visited[x] = True
+    time = 0
+    return_time = 10e9
+    return_cnt = 0
+
+    while True:
+        time += 1
+        temp = []
+
+        if time == return_time + 1:
+            return return_time, return_cnt
+
+        for _ in range(len(q)):
+            nx = q.popleft()
+            move_list = [nx * 2, nx + 1, nx - 1]
+
+            for move in move_list:
+                if -1 < move < 100001 and visited[move] == False:
+                    if move == k:
+                        return_time = time
+                        return_cnt += 1
+                    else:
+                        q.append(move)
+                        temp.append(move)
+        set(temp)
+        for i in temp:
+            visited[i] = True
+                    
+n, k = map(int, sys.stdin.readline().split())
+visited = [False] * 1000001
+
+if n == k:
+    print(0)
+    print(1)
+else:
+    result_time, result_cnt = bfs(n)
+    print(result_time)
+    print(result_cnt)
