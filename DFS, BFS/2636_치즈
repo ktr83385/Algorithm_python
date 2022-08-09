@@ -1,0 +1,57 @@
+import sys
+from collections import deque
+
+def bfs(x, y):
+    q = deque()
+    q.append([x, y])
+    visited[x][y] = True
+
+    dx = [0, 0, 1, -1] #동서남북
+    dy = [1, -1, 0, 0]
+
+    while q:
+        a, b = q.popleft()
+
+        for i in range(4):
+            nx = dx[i] + a
+            ny = dy[i] + b
+
+            if -1 < nx < n and -1 < ny < m and visited[nx][ny] == False and graph[nx][ny] == 0:
+                q.append([nx, ny])
+                visited[nx][ny] = True
+
+n, m = map(int, sys.stdin.readline().split())
+
+graph = []
+
+for _ in range(n):
+    graph.append(list(map(int, sys.stdin.readline().split())))
+
+
+cheeze_cnt = 0
+time = 0
+
+for i in range(n):
+    for j in range(m):
+        if graph[i][j] == 1:
+            cheeze_cnt += 1
+
+while True:
+    if cheeze_cnt == 0:
+        print(time)
+        print(temp_cheeze_cnt)
+        break
+
+    time += 1
+
+    temp_cheeze_cnt = 0
+    visited = [[False] * m for _ in range(n)]
+    bfs(0, 0)
+
+    for i in range(n):
+        for j in range(m):
+            if graph[i][j] == 1:
+                if visited[i][j + 1] == True or visited[i][j - 1] == True or visited[i + 1][j] == True or visited[i - 1][j] == True:
+                    graph[i][j] = 0
+                    temp_cheeze_cnt += 1
+                    cheeze_cnt -= 1
