@@ -1,0 +1,68 @@
+import sys
+from collections import deque
+
+def bfs(x, y):
+    q = deque()
+    q.append([x, y])
+    visited1[x][y] = True
+    
+    for i in range(n):
+        for j in range(m):
+            if graph[i][j] == "*":
+                q.append([i, j])
+                visited2[i][j] = True
+    
+    dx = [0, 0, 1, -1] #동서남북
+    dy = [1, -1, 0, 0]
+
+    time = 0
+
+    while q:
+        time += 1
+
+        for _ in range(len(q)):
+            a, b = q.popleft()
+
+            for i in range(4):
+                nx = dx[i] + a
+                ny = dy[i] + b
+
+                if -1 < nx < n and -1 < ny < m:
+                    if graph[a][b] == "S" and graph[nx][ny] == "D":
+                        return time
+
+                    if visited1[nx][ny] == False and visited2[nx][ny] == False and graph[a][b] == "S" and graph[nx][ny] == ".":
+                        graph[nx][ny] = "S"
+                        visited1[nx][ny] = True
+                        q.append([nx, ny])
+
+                    elif visited2[nx][ny] == False and graph[a][b] == "*" and (graph[nx][ny] == "." or graph[nx][ny] == "S"):
+                        graph[nx][ny] = "*"
+                        visited2[nx][ny] = True
+                        q.append([nx, ny])
+
+    return "KAKTUS"
+
+n, m = map(int, sys.stdin.readline().split())
+
+graph = []
+visited1 = [[False] * m for _ in range(n)]
+visited2 = [[False] * m for _ in range(n)]
+flag = 0
+
+for _ in range(n):
+    graph.append(list(sys.stdin.readline().strip()))
+
+if n == 1 and m == 1:
+    print(0)
+else:
+    for i in range(n):
+        for j in range(m):
+            if graph[i][j] == "S":
+                flag = 1
+                result = bfs(i, j)
+                break
+        if flag == 1:
+            break
+
+    print(result)
