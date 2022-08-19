@@ -1,0 +1,90 @@
+# 2차원 리스트 복사 시 깊은 복사, 얕은 복사 관련 링크
+# https://codesyun.tistory.com/198
+# 깊은 복사(객체 주소 다르면서 값은 복사)의 경우, 
+# Slicing / deepcopy()가 있는데, Slicing이 훨씬 더 빠름
+
+import sys
+from collections import deque
+
+def ice_melting_bfs(x, y):
+    q = deque()
+    q.append([x, y])
+    visited[x][y] = True
+
+    dx = [0, 0, 1, -1] #동서남북
+    dy = [1, -1, 0, 0]
+
+    while q:
+        a, b = q.popleft()
+
+        for i in range(4):
+            nx = dx[i] + a
+            ny = dy[i] + b
+
+            if -1 < nx < n and -1 < ny < m:
+                if visited[nx][ny] == False and graph[nx][ny] == 0:
+                    q.append([nx, ny])
+                    visited[nx][ny] = True
+
+                elif temp[nx][ny] > 0:
+                    temp[nx][ny] -= 1
+
+def ice_mountain_bfs(x, y):
+    q = deque()
+    q.append([x, y])
+    visited[x][y] = True
+    
+    dx = [0, 0, 1, -1] #동서남북
+    dy = [1, -1, 0, 0]
+
+    while q:
+        a, b = q.popleft()
+
+        for i in range(4):
+            nx = dx[i] + a
+            ny = dy[i] + b
+
+            if -1 < nx < n and -1 < ny < m:
+                if visited[nx][ny] == False and graph[nx][ny] != 0:
+                    q.append([nx, ny])
+                    visited[nx][ny] = True
+
+ 
+n, m = map(int, sys.stdin.readline().split())
+
+graph = []
+
+for _ in range(n):
+    graph.append(list(map(int, sys.stdin.readline().split())))
+
+year_cnt = 0
+ice_mountain_cnt = 0
+
+while True:
+    ice_mountain_cnt = 0
+    visited = [[False] * m for _ in range(n)]
+
+    for i in range(n):
+        for j in range(m):
+            if visited[i][j] == False and graph[i][j] != 0:
+                ice_mountain_cnt += 1
+                ice_mountain_bfs(i, j)
+
+    if ice_mountain_cnt >= 2:
+        print(year_cnt)
+        break
+
+    if all(0 >= sum(i) for i in graph) and ice_mountain_cnt < 2:
+        print(0)
+        break
+
+    year_cnt += 1
+
+    temp = graph[:]
+
+    for i in range(n):
+        for j in range(m):
+            if visited[i][j] == False and graph[i][j] == 0:
+                ice_melting_bfs(i, j)
+    
+    graph = temp[:]
