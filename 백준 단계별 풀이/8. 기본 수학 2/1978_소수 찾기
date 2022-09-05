@@ -1,0 +1,18 @@
+import math
+import sys
+
+n = int(sys.stdin.readline())
+num_list = list(map(int, sys.stdin.readline().split()))
+
+demical_cnt = 0
+
+for i in num_list:
+    cnt = 0
+    for j in range(1, i + 1):
+        if i % j == 0:
+            cnt += 1
+    
+    if cnt == 2:
+        demical_cnt += 1
+
+print(demical_cnt)
