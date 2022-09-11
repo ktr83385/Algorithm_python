@@ -1,0 +1,56 @@
+import sys
+from collections import deque
+
+def bfs(x, y, dir):
+    q = deque()
+    q.append([x, y, dir])
+    # visited[x][y] = True
+    graph[x][y] = 2
+
+    count = 1
+
+    while q:
+        a, b, di = q.popleft()
+
+        for i in range(4):
+
+            di -= 1
+            if di == -1:
+                di = 3
+            nx = dx[di] + a
+            ny = dy[di] + b
+
+            # if 0 > nx or n <= nx or 0 > ny or m <= ny:
+            if -1 < nx < n and -1 < ny < m and graph[nx][ny] == 0:
+                graph[nx][ny] = 2
+                q.append([nx, ny, di])
+                count += 1
+                break
+            
+            if i == 3:
+                temp_di = di - 2
+                if temp_di < 0:
+                    temp_di += 4
+
+                nx = dx[temp_di] + a
+                ny = dy[temp_di] + b
+                if (-1 < nx < n and -1 < ny < m and graph[nx][ny] == 1) or 0 > nx or n <= nx or 0 > ny or m <= ny:
+                    return count
+                if -1 < nx < n and -1 < ny < m and graph[nx][ny] == 2:
+                    q.append([nx, ny, di])
+
+            
+        
+dx = [-1, 0, 1, 0] #북동남서
+dy = [0, 1, 0, -1]
+
+n, m = map(int, sys.stdin.readline().split())
+r, c, d = map(int, sys.stdin.readline().split())
+
+graph = []
+# visited = [[False] * m for _ in range(n)]
+
+for _ in range(n):
+    graph.append(list(map(int, sys.stdin.readline().split())))
+
+print(bfs(r, c, d))

@@ -1,0 +1,27 @@
+import sys
+
+n = int(sys.stdin.readline())
+
+graph = list(map(int, sys.stdin.readline().split()))
+
+b, c = map(int, sys.stdin.readline().split())
+
+supervisor_sum = 0
+
+for i in graph:
+    i -= b
+    
+    if i >= 0:
+        supervisor_sum += 1
+    
+        if i != 0:
+            u = i // c
+            supervisor_sum += u
+
+            v = i % c
+            if v != 0:
+                supervisor_sum += 1
+    else:
+        supervisor_sum += 1
+
+print(supervisor_sum)

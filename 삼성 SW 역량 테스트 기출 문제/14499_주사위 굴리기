@@ -1,0 +1,95 @@
+# 1. 동/서/남/북 이동방향에 따른 주사위의 전개도 최신화
+
+import sys
+from collections import deque
+
+def move(d, graph, nx, ny):
+    temp_dice = dice[:]
+    if d == 1: #동쪽으로 굴리기
+        if graph[nx][ny] == 0: # 칸에 적혀있는 수가 0이라면
+            graph[nx][ny] = temp_dice[2]
+            dice[1] = temp_dice[2]
+        else: # 칸에 적혀있는 수가 0이 아니라면
+            dice[1] = graph[nx][ny]
+            graph[nx][ny] = 0
+
+        dice[0] = temp_dice[3]  #서쪽에 있던 것이 위로 감
+        dice[2] = temp_dice[0]  #위에 있던 것이 동쪽으로 감
+        dice[3] = temp_dice[1]  #아래에 있던 것이 서쪽으로 감
+        dice[4] = temp_dice[4]  #남쪽에 있던 것 그대로
+        dice[5] = temp_dice[5]  #북쪽에 있던 것 그대로
+    
+    elif d == 2: #서쪽으로 굴리기
+        if graph[nx][ny] == 0: # 칸에 적혀있는 수가 0이라면
+            graph[nx][ny] = temp_dice[3]
+            dice[1] = temp_dice[3]
+        else: # 칸에 적혀있는 수가 0이 아니라면
+            dice[1] = graph[nx][ny]
+            graph[nx][ny] = 0
+
+        dice[0] = temp_dice[2]  #동쪽에 있던 것이 위로 감
+        dice[2] = temp_dice[1]  #밑에 있던 것이 동쪽으로 감
+        dice[3] = temp_dice[0]  #위에 있던 것이 서쪽으로 감 
+        dice[4] = temp_dice[4]  #남쪽에 있던 것 그대로
+        dice[5] = temp_dice[5]  #북쪽에 있던 것 그대로
+
+    elif d == 3: #북쪽으로 굴리기
+        if graph[nx][ny] == 0: # 칸에 적혀있는 수가 0이라면
+            graph[nx][ny] = temp_dice[5]
+            dice[1] = temp_dice[5]
+        else: # 칸에 적혀있는 수가 0이 아니라면
+            dice[1] = graph[nx][ny]
+            graph[nx][ny] = 0
+
+        dice[0] = temp_dice[4]  #남쪽에 있던 것이 위로 감
+        dice[2] = temp_dice[2]  #동쪽에 있던 것 그대로
+        dice[3] = temp_dice[3]  #서쪽에 있던 것 그대로 
+        dice[4] = temp_dice[1]  #밑에 있던 것이 남쪽으로 감
+        dice[5] = temp_dice[0]  #위에 있던 것이 북쪽으로 감
+
+    elif d == 4: #남쪽으로 굴리기
+        if graph[nx][ny] == 0: # 칸에 적혀있는 수가 0이라면
+            graph[nx][ny] = temp_dice[4]
+            dice[1] = temp_dice[4]
+        else: # 칸에 적혀있는 수가 0이 아니라면
+            dice[1] = graph[nx][ny]
+            graph[nx][ny] = 0
+
+        dice[0] = temp_dice[5]  #북쪽에 있던 것이 위로 감
+        dice[2] = temp_dice[2]  #동쪽에 있던 것 그대로
+        dice[3] = temp_dice[3]  #서쪽에 있던 것 그대로 
+        dice[4] = temp_dice[0]  #위에 있던 것이 남쪽으로 감
+        dice[5] = temp_dice[1]  #밑에 있던 것이 북쪽으로 감
+        
+    return graph
+
+def bfs(x, y, graph):
+    dx = [0, 0, 0, -1, 1] #동서북남
+    dy = [0, 1, -1, 0, 0]
+    
+    nx, ny = x, y
+
+    for i in move_list:
+        nx = dx[i] + nx
+        ny = dy[i] + ny
+
+        if 0 > nx or n <= nx or 0 > ny or m <= ny:
+            nx -= dx[i]
+            ny -= dy[i]
+            continue
+
+        graph = move(i, graph, nx, ny)
+
+        print(dice[0])
+
+n, m, x, y, k = map(int, sys.stdin.readline().split())
+
+graph = []
+dice = [0, 0, 0, 0, 0, 0] # 위, 아래, 동, 서, 남, 북
+
+for _ in range(n):
+    graph.append(list(map(int, sys.stdin.readline().split())))
+
+move_list = list(map(int, sys.stdin.readline().split()))
+
+bfs(x, y, graph)
