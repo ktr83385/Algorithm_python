@@ -1,0 +1,103 @@
+import sys
+from collections import deque
+
+def dice_thr(x, y, d):
+    global point, dice
+    temp_dice = dice[:]
+
+    #주사위가 이동 방향으로 한 칸 이동
+    nx = x + dx[d]
+    ny = y + dy[d]
+
+    if 0 > nx or n <= nx or 0 > ny or m <= ny:
+        # 반대 방향으로 방향 바꾸기
+        d = (d + 2) % 4
+        nx = x + dx[d]
+        ny = y + dy[d]
+    
+    # 주사위가 도착한 칸에 대한 점수 획득
+    result = bfs(nx, ny)
+    point += result
+
+    # 주사위가 굴러간 후 주사위 방향
+    if d == 0: #주사위 방향 동쪽
+        dice[0] = temp_dice[4] #위
+        dice[1] = temp_dice[0] #동
+        dice[2] = temp_dice[2] #남
+        dice[3] = temp_dice[1] #아래
+        dice[4] = temp_dice[3] #서
+        dice[5] = temp_dice[5] #북
+    
+    elif d == 1: #주사위 방향 북쪽 
+        dice[0] = temp_dice[2] #위
+        dice[1] = temp_dice[1] #동
+        dice[2] = temp_dice[3] #남
+        dice[3] = temp_dice[5] #아래
+        dice[4] = temp_dice[4] #서
+        dice[5] = temp_dice[0] #북
+    
+    elif d == 2: #주사위 방향 서쪽
+        dice[0] = temp_dice[1] #위
+        dice[1] = temp_dice[3] #동
+        dice[2] = temp_dice[2] #남
+        dice[3] = temp_dice[4] #아래
+        dice[4] = temp_dice[0] #서
+        dice[5] = temp_dice[5] #북
+    
+    elif d == 3: #주사위 방향 남쪽
+        dice[0] = temp_dice[5] #위
+        dice[1] = temp_dice[1] #동
+        dice[2] = temp_dice[0] #남
+        dice[3] = temp_dice[2] #아래
+        dice[4] = temp_dice[4] #서
+        dice[5] = temp_dice[3] #북
+
+    if dice[3] > board[nx][ny]: #90도 시계방향으로 회전
+        d = (d - 1) % 4
+    elif dice[3] < board[nx][ny]: #90도 반시계방향으로 회전
+        d = (d + 1) % 4
+    
+    return nx, ny, d
+
+def bfs(x, y):
+    q = deque()
+    visited = [[False] * m for _ in range(n)]
+    q.append([x, y])
+    visited[x][y] = True
+
+    cnt = 1
+    
+    while q:
+        a, b = q.popleft()
+        
+        for i in range(4):
+            nx = a + dx[i]
+            ny = b + dy[i]
+
+            if -1 < nx < n and -1 < ny < m and visited[nx][ny] == False and board[nx][ny] == board[a][b]:
+                cnt += 1
+                visited[nx][ny] = True
+                q.append([nx, ny])
+    
+    return board[x][y] * cnt
+
+dx = [0, -1, 0, 1] #동북서남
+dy = [1, 0, -1, 0]
+
+n, m, k = map(int, sys.stdin.readline().split())
+
+board = []
+
+for _ in range(n):
+    board.append(list(map(int, sys.stdin.readline().split())))
+
+dice = [1, 3, 5, 6, 4, 2] #위 동 남 아래 서 북
+d = 0
+x, y = 0, 0
+
+point = 0
+
+for _ in range(k):
+    x, y, d = dice_thr(x, y, d)
+
+print(point)
