@@ -1,0 +1,79 @@
+import sys
+
+def search_like_student(student):
+    temp = []
+    for x in range(n):
+        for y in range(n):
+            near_cnt = 0
+            empty_cnt = 0
+            for i in range(4):
+                nx = x + dx[i]
+                ny = y + dy[i]
+                if -1 < nx < n and -1 < ny < n:
+                    if any(board[nx][ny] in k for k in like_student[student]):
+                        near_cnt += 1
+                    if board[nx][ny] == 0:
+                        empty_cnt += 1
+            
+            temp.append([near_cnt, empty_cnt, x, y])
+    
+    temp.sort(key = lambda x: (-x[0], -x[1], x[2], x[3]))
+    
+    for i in temp:
+        target_x = i[2]
+        target_y = i[3]
+        if visited[target_x][target_y] == False:
+            board[target_x][target_y] = student
+            visited[target_x][target_y] = True
+            break
+
+def get_satisfaction(x, y):
+    cnt = 0
+    for i in range(4):
+        nx = x + dx[i]
+        ny = y + dy[i]
+        if -1 < nx < n and -1 < ny < n:
+            if any(board[nx][ny] in k for k in like_student[board[x][y]]):
+                cnt += 1
+    
+    if cnt == 1:
+        satisfaction_board[x][y] = 1
+    elif cnt == 2:
+        satisfaction_board[x][y] = 10
+    elif cnt == 3:
+        satisfaction_board[x][y] = 100
+    elif cnt == 4:
+        satisfaction_board[x][y] = 1000
+
+
+n = int(sys.stdin.readline())
+
+dx = [0, 0, 1, -1] #동서남북
+dy = [1, -1, 0, 0]
+
+student = []
+like_student = [[] for _ in range(n * n + 1)]
+board = [[0] * n for _ in range(n)]
+satisfaction_board = [[0] * n for _ in range(n)]
+visited = [[False] * n for _ in range(n)]
+
+for _ in range(n * n):
+    a, b, c, d, e = map(int, sys.stdin.readline().split())
+    student.append(a)
+    like_student[a].append([b, c, d, e])
+
+# 1. 자리 배치
+for i in student:
+    search_like_student(i)
+
+# 2. 만족도 구하기
+for i in range(n):
+    for j in range(n):
+        get_satisfaction(i, j)
+
+sum = 0
+for i in range(n):
+    for j in range(n):
+        sum += satisfaction_board[i][j]
+
+print(sum)
