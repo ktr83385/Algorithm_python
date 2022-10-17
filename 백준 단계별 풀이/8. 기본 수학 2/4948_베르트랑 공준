@@ -1,0 +1,19 @@
+import sys
+import math
+
+while True:
+    n = int(sys.stdin.readline())
+
+    if n == 0:
+        break
+
+    decimal_cnt = 2 * n - n
+
+    for i in range(n + 1, n * 2 + 1):
+        divider = int(math.sqrt(i))
+        for j in range(2, divider + 1):
+            if i % j == 0:
+                decimal_cnt -= 1
+                break
+
+    print(decimal_cnt)
