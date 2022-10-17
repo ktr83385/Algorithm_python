@@ -1,0 +1,19 @@
+import sys
+import math
+
+m, n = map(int, sys.stdin.readline().split())
+
+for i in range(m, n + 1):
+    if i == 1:
+        continue
+    divider = int(math.sqrt(i))
+    cnt = 1
+    flag = False
+
+    for j in range(2, divider + 1):
+        if i % j == 0:
+            flag = True
+            break
+    
+    if flag == False:
+        print(i)
