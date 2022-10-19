@@ -1,0 +1,23 @@
+# 입력받은 num을 반으로 쪼개, 1개는 +1씩, 나머지 하나는 -1씩 해가면서 
+# 소수인지 체크
+import sys
+
+def is_prime(num):
+    for i in range(2, int(num ** 0.5) + 1):
+        if num % i == 0:
+            return False
+    return True
+
+t = int(sys.stdin.readline())
+
+for _ in range(t):
+    n = int(sys.stdin.readline())
+    a = b = n // 2
+    
+    while a > 0:
+        if is_prime(a) and is_prime(b):
+            print(a, b)
+            break
+        else:
+            a -= 1
+            b += 1
