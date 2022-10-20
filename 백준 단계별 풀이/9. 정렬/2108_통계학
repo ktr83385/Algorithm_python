@@ -1,0 +1,28 @@
+import sys
+from collections import Counter
+
+n = int(sys.stdin.readline())
+li = []
+
+for _ in range(n):
+    li.append(int(sys.stdin.readline()))
+
+li.sort()
+
+sum_average = int(round(sum(li) / len(li), 0))
+center_val = li[n // 2]
+
+#최빈값 가져올 때, value값이 낮은 것부터 오름차순으로 가져옴.
+cnt = Counter(li).most_common(2) #ex) [(-2, 1), (1, 1)]
+                                     # val, 빈도수
+
+if len(cnt) > 1 and cnt[0][1] == cnt[1][1]:
+    max_appear_val = cnt[1][0]
+else:
+    max_appear_val = cnt[0][0]
+range_val = li[-1] - li[0]
+
+print(sum_average)
+print(center_val)
+print(max_appear_val)
+print(range_val)
