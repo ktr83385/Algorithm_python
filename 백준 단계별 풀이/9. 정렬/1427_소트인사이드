@@ -1,0 +1,11 @@
+import sys
+
+li = list(sys.stdin.readline().strip())
+
+li.sort(reverse = True)
+
+string = ''
+for i in li:
+    string += i
+    
+print(string)
