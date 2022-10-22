@@ -1,0 +1,15 @@
+import sys
+
+n = int(sys.stdin.readline())
+
+li = list(map(int, sys.stdin.readline().split()))
+li_copy = li[:]
+li_copy = sorted(list(set(li_copy)))
+
+#list.index(i) 형태의 시간 복잡도 = O(N)
+#index[i] 형태의 시간 복잡도 = O(1)
+
+dic = {li_copy[i] : i for i in range(len(li_copy))}
+
+for i in li:
+    print(dic[i], end = " ")
