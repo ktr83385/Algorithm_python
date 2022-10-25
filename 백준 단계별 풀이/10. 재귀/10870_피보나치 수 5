@@ -1,0 +1,19 @@
+import sys
+
+def fibonacci(n, m, cnt):
+    k = n + m
+    
+    if cnt < num:
+        fibonacci(m, k, cnt + 1)
+    else:
+        print(k)
+        return
+
+num = int(sys.stdin.readline())
+
+if num == 0:
+    print(0)
+elif num == 1:
+    print(1)
+else:
+    fibonacci(0, 1, 2)
